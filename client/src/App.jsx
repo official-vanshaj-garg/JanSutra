@@ -6,6 +6,7 @@ import Checklist from './components/Checklist';
 import MockBooth from './components/MockBooth';
 import SatyaCheck from './components/SatyaCheck';
 import OfficialLinks from './components/OfficialLinks';
+import AssistantPanel from './components/AssistantPanel';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
 
@@ -57,6 +58,7 @@ function App() {
             <Timeline items={journey} />
             <Checklist items={checklist} />
             <MockBooth apiBase={`${API_BASE}/api`} />
+            <AssistantPanel apiBase={`${API_BASE}/api`} context={userContext} />
           </div>
         )}
 
