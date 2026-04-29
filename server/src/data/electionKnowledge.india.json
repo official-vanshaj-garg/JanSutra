@@ -1,0 +1,14 @@
+{
+  "forms": {
+    "Form 6": "For new registration of electors.",
+    "Form 8": "For correction of entries, shifting of residence.",
+    "Form 12D": "For absent voters like senior citizens or PwDs to vote from home."
+  },
+  "documents": [
+    "EPIC (Voter ID)",
+    "Aadhaar Card",
+    "PAN Card",
+    "Driving License",
+    "Passport"
+  ]
+}

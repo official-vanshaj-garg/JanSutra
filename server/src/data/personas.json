@@ -1,0 +1,6 @@
+{
+  "firstTimeVoter": { "isFirstTimeVoter": true },
+  "seniorCitizen": { "isSeniorCitizen": true },
+  "pwdVoter": { "isPwD": true },
+  "standardVoter": {}
+}
