@@ -1,122 +1,71 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState } from 'react';
+import Header from './components/Header';
+import JanPathWizard from './components/JanPathWizard';
+import Timeline from './components/Timeline';
+import Checklist from './components/Checklist';
+import MockBooth from './components/MockBooth';
+import SatyaCheck from './components/SatyaCheck';
+import OfficialLinks from './components/OfficialLinks';
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [sahajMode, setSahajMode] = useState(false);
+  const [userContext, setUserContext] = useState(null);
+  const [journey, setJourney] = useState([]);
+  const [checklist, setChecklist] = useState([]);
+
+  const toggleSahaj = () => {
+    setSahajMode(!sahajMode);
+    document.documentElement.setAttribute('data-sahaj', !sahajMode);
+  };
+
+  const handleContextSubmit = async (context) => {
+    setUserContext(context);
+    
+    // Fetch Journey
+    const journeyRes = await fetch(`${API_BASE}/api/journey`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(context)
+    });
+    const journeyData = await journeyRes.json();
+    setJourney(journeyData.journey);
+
+    // Fetch Checklist
+    const checklistRes = await fetch(`${API_BASE}/api/checklist`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(context)
+    });
+    const checklistData = await checklistRes.json();
+    setChecklist(checklistData.checklist);
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="container">
+      <Header sahajMode={sahajMode} toggleSahaj={toggleSahaj} />
+      
+      <main>
+        {!userContext ? (
+          <JanPathWizard onSubmit={handleContextSubmit} />
+        ) : (
+          <div className="journey-results">
+            <button className="btn btn-secondary" onClick={() => setUserContext(null)} style={{marginBottom: '1rem'}}>
+              Start Over
+            </button>
+            <Timeline items={journey} />
+            <Checklist items={checklist} />
+            <MockBooth apiBase={`${API_BASE}/api`} />
+          </div>
+        )}
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        <hr style={{margin: '2rem 0', borderColor: 'var(--border-color)'}} />
+        <SatyaCheck apiBase={`${API_BASE}/api`} />
+        <OfficialLinks apiBase={`${API_BASE}/api`} />
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default App;
