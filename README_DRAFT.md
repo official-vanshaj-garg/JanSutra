@@ -19,7 +19,7 @@ We designed JanSutra to be a serious, production-minded civic education product 
 ## The Approach and Logic
 Elections are sensitive. Our logic is built on **Education over Prediction** and **Neutrality over Engagement**.
 - We use a small local JSON knowledge base for core civic facts.
-- The Gemini API is used strictly from the backend to generate personalized educational narratives and perform intent classification (SatyaCheck).
+- The Gemini API is used strictly from the server to generate personalized educational narratives and perform intent classification (SatyaCheck).
 - We do not store any PII, nor do we require a database.
 - We deliberately avoid displaying real political parties or candidates in our simulations to maintain absolute neutrality.
 
@@ -33,6 +33,20 @@ Elections are sensitive. Our logic is built on **Education over Prediction** and
 - Backend: Node.js + Express
 - AI: Gemini API
 - Deployment: Google Cloud Run
+
+## How to Run Locally
+
+1. **Clone the repository**
+2. **Server Setup:**
+   - `cd server`
+   - `npm install`
+   - Create a `.env` file and add your API key: `GEMINI_API_KEY=your_google_api_key_here` (Note: `GEMINI_API_KEY` must never be committed to version control)
+   - `npm run dev` to start the Express server
+3. **Client Setup:**
+   - Open a new terminal window
+   - `cd client`
+   - `npm install`
+   - `npm run dev` to start the Vite client
 
 ## Documentation
 Please review the `docs/` folder for comprehensive planning, architecture, and testing details:

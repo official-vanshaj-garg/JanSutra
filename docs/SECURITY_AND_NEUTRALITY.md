@@ -3,7 +3,7 @@
 JanSutra operates on strict non-partisan and privacy-first principles. We employ the **SatyaCheck** module to enforce these rules.
 
 ## Core Security Principles
-1. **No Frontend API Keys:** All LLM communication routes through our Express backend.
+1. **No Client API Keys:** All LLM communication routes through our Express server.
 2. **Zero PII Storage:** We do not use a database. User state (like first-time voter status) exists only in the client's session/memory and is not persisted.
 3. **Strict Validation:** Input is sanitized and rate-limited to prevent abuse and prompt injection.
 4. **Authoritative Fallbacks:** We never claim unofficial deadlines as final.
@@ -13,7 +13,7 @@ The system MUST refuse to engage with the following topics:
 - **Political Persuasion:** Debating policies, analyzing party manifestos, or predicting election outcomes.
 - **Candidate/Party Recommendation:** Suggesting who to vote for based on user preferences.
 - **Sensitive Personal Data Collection:** Asking for actual Aadhar, Voter ID numbers, or exact home addresses.
-- **Unverified Deadline Claims:** Stating exact election dates for specific constituencies unless fetched from an official, static, verified JSON source.
+- **Unverified Deadline Claims:** JanSutra must not state exact election dates, deadlines, eligibility cutoffs, polling booth details, or constituency-specific live information as final. Such queries must be redirected to official Election Commission or election authority portals for live, authoritative verification.
 
 ## Example Prompts and Safe Responses
 

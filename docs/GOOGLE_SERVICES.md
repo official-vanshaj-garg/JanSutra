@@ -6,12 +6,12 @@ JanSutra leverages Google Cloud and Developer tools to ensure scalability, secur
    - Used for the entire development lifecycle, enabling agentic coding, rapid prototyping of the React UI, and streamlined documentation generation.
 
 2. **Gemini API:**
-   - **Purpose:** Used via the Node.js SDK on the backend to provide dynamic, personalized, and neutral explanations of civic processes.
+   - **Purpose:** Used via the Node.js SDK on the server to provide dynamic, personalized, and neutral explanations of civic processes.
    - **Safety:** Utilizes structured JSON output and rigorous system instructions to classify user intent (SatyaCheck) and prevent political bias.
 
 3. **Google Cloud Run:**
    - **Purpose:** Serverless deployment of our containerized Node.js application.
-   - **Benefits:** Ensures we can handle spikes in traffic during election seasons, provides secure HTTPS endpoints, and manages our environment variables securely without exposing them in the frontend.
+   - **Benefits:** Ensures we can handle spikes in traffic during election seasons, provides secure HTTPS endpoints, and manages our environment variables securely without exposing them in the client.
 
 4. **Google Civic Information API (Optional Context):**
    - While highly effective for U.S. use cases, JanSutra is designed with an India-first approach.

@@ -31,7 +31,7 @@ Create an assistant that helps users understand the election process, timelines,
 ## Recommended Tech Stack
 - **Frontend:** React + Vite
 - **Backend:** Node.js + Express
-- **AI Integration:** Gemini API (accessed strictly from the backend via `GEMINI_API_KEY`)
+- **AI Integration:** Gemini API (accessed strictly from the server via `GEMINI_API_KEY`)
 - **Knowledge Base:** Small local JSON knowledge base (no external database)
 - **Deployment:** Google Cloud Run
 - **Testing Framework:** Vitest/Jest (for timeline, checklist, simulation, and neutrality logic)
