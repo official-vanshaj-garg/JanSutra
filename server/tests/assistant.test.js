@@ -34,18 +34,27 @@ test('sensitive personal data not sent to Gemini (layer 1)', () => {
     expect(intent.intent).toBe("sensitive_personal_data");
 });
 
-test('safe process question gets an explainable response or fallback', async () => {
-    // It should either call Gemini (if key exists) or return fallback. 
-    // Since we don't assume a valid key here, we expect the fallback structure.
+test('safe VVPAT question returns useful educational fallback if Gemini fails', async () => {
     const res = await generateExplanation({}, "How does a VVPAT machine work?");
-    expect(res).toHaveProperty('answer');
-    expect(res).toHaveProperty('safetyCategory');
-    expect(res).toHaveProperty('usedFallback');
-    expect(res).toHaveProperty('officialVerificationRequired');
+    expect(res.answer).toContain("Voter Verifiable Paper Audit Trail");
+    expect(res.usedFallback).toBe(true);
+    expect(res.officialVerificationRequired).toBe(true);
+});
+
+test('safe EVM question returns useful educational fallback if Gemini fails', async () => {
+    const res = await generateExplanation({}, "How does EVM work?");
+    expect(res.answer).toContain("Electronic Voting Machine");
+    expect(res.usedFallback).toBe(true);
+});
+
+test('safe registration question returns useful educational fallback if Gemini fails', async () => {
+    const res = await generateExplanation({}, "How do I register to vote?");
+    expect(res.answer).toContain("Form 6");
+    expect(res.usedFallback).toBe(true);
 });
 
 test('assistant response includes officialVerificationRequired when needed', async () => {
-    // Using missing key fallback, it should always mandate verification.
     const res = await generateExplanation({}, "Where is my polling booth?");
+    expect(res.answer).toContain("designated location");
     expect(res.officialVerificationRequired).toBe(true);
 });
