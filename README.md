@@ -11,6 +11,15 @@ It provides an interactive **JanPath Wizard** to map out personalized voting jou
 ## 🎯 Chosen Vertical
 **Voter Education and Engagement (Option B)**
 
+## 🌟 What makes JanSutra different?
+- **Not a generic chatbot**: JanSutra is a structured, interactive election literacy lab.
+- **Deterministic-first civic learning**: The core timelines and checklists are generated safely without AI hallucinations.
+- **Mock booth rehearsal**: Hands-on learning simulation using neutral dummy candidates.
+- **SatyaCheck neutrality guardrail**: A transparent, dual-layer safety engine that blocks political recommendations and sensitive PII.
+- **Sahaj accessibility mode**: A robust high-contrast, large-font UI built for elderly and visually impaired users.
+- **Civic readiness score**: A gamified, deterministic percentage to track learning progress.
+- **Official verification first**: Pushes users directly to Election Commission portals instead of guessing live data.
+
 ## 🧠 Approach & Logic
 JanSutra is built with a **Deterministic-First** architecture. This ensures absolute neutrality and prevents the AI from generating political hallucinations.
 

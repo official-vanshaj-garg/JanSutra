@@ -9,6 +9,7 @@ const satyaCheckRoute = require('./routes/satyaCheck');
 const simulationRoute = require('./routes/simulation');
 const officialLinksRoute = require('./routes/officialLinks');
 const assistantRoute = require('./routes/assistant');
+const readinessRoute = require('./routes/readiness');
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use('/api/satya-check', satyaCheckRoute);
 app.use('/api/simulation', simulationRoute);
 app.use('/api/official-links', officialLinksRoute);
 app.use('/api/assistant', assistantRoute);
+app.use('/api/readiness', readinessRoute);
 
 // Serve Static React App in Production
 app.use(express.static(path.join(__dirname, '../public')));

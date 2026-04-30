@@ -21,3 +21,23 @@ test('unverified deadline warning', () => {
     expect(result.intent).toBe('unverified_deadline_claim');
     expect(result.message).toContain('Please verify the exact dates and deadlines');
 });
+
+test('dynamic partisan declaration refusal (DMK/TMK)', () => {
+    const result1 = analyzeIntent('I love TMK party, I will always vote to them.');
+    expect(result1.safe).toBe(false);
+    expect(result1.intent).toBe('political_persuasion');
+
+    const result2 = analyzeIntent('I love DMK party');
+    expect(result2.safe).toBe(false);
+    expect(result2.intent).toBe('political_persuasion');
+});
+
+test('safe educational query allows "party" and "vote"', () => {
+    const result1 = analyzeIntent('What is a political party?');
+    expect(result1.safe).toBe(true);
+    expect(result1.intent).toBe('educational');
+
+    const result2 = analyzeIntent('What documents should I understand before voting?');
+    expect(result2.safe).toBe(true);
+    expect(result2.intent).toBe('educational');
+});

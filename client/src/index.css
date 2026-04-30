@@ -15,13 +15,18 @@
 }
 
 [data-sahaj="true"] {
-  --font-base: 20px;
+  --font-base: 22px;
   --primary: #000000; /* High contrast */
   --primary-hover: #333333;
   --bg-color: #ffffff;
+  --surface: #ffffff;
   --border-color: #000000;
+  --text-main: #000000;
   --text-secondary: #000000;
   --border-radius: 4px;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 3rem;
 }
 
 * {

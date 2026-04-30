@@ -15,6 +15,17 @@ function analyzeIntent(query) {
         };
     }
 
+    // Block dynamic partisan declarations (e.g. "I love TMK party", "I will vote for XYZ")
+    const partisanRegex = /(i (love|support|hate) [a-z0-9 ]+ party|i will (always )?vote (to|for) [a-z0-9 ]+|[a-z0-9 ]+ party is (best|worst)|vote for [a-z0-9 ]+)/i;
+    
+    if (partisanRegex.test(lowerQuery)) {
+        return {
+            intent: "political_persuasion",
+            safe: false,
+            message: "JanSutra cannot recommend candidates, parties, or voting choices. I can help you understand the election process, how to verify official information, and how to make your own informed decision."
+        };
+    }
+
     const persuasionKeywords = [
         "bad for", "policy", "debate", "should i support", "who is better for india",
         "convince me to vote", "bjp", "congress", "aap", "trinamool", "cpm", "bsp", "ncp"

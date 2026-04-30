@@ -33,27 +33,22 @@ export default function OfficialLinks({ apiBase }) {
         </p>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-        <a 
-          href={links.votersPortal} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="btn btn-secondary"
-          style={{ textDecoration: 'none', justifyContent: 'flex-start' }}
-        >
-          <ExternalLink size={18} />
-          Voters' Service Portal (Check Roll / Apply)
-        </a>
-        <a 
-          href={links.eciWebsite} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="btn btn-secondary"
-          style={{ textDecoration: 'none', justifyContent: 'flex-start' }}
-        >
-          <ExternalLink size={18} />
-          Election Commission of India (Main Website)
-        </a>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+        <div style={{ padding: '1rem', border: '1px solid var(--border-color)', borderRadius: 'var(--border-radius)' }}>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Voters' Service Portal</h3>
+          <p style={{ fontSize: '0.9rem', marginBottom: '1rem' }}>Register via Form 6, update details, or check your name on the electoral roll.</p>
+          <a href={links.votersPortal} target="_blank" rel="noopener noreferrer" className="btn btn-secondary" style={{ textDecoration: 'none', width: '100%' }}>
+            <ExternalLink size={18} /> Visit Portal
+          </a>
+        </div>
+
+        <div style={{ padding: '1rem', border: '1px solid var(--border-color)', borderRadius: 'var(--border-radius)' }}>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Election Commission</h3>
+          <p style={{ fontSize: '0.9rem', marginBottom: '1rem' }}>Learn about EVM/VVPAT, accessibility for PwD, and official deadlines.</p>
+          <a href={links.eciWebsite} target="_blank" rel="noopener noreferrer" className="btn btn-secondary" style={{ textDecoration: 'none', width: '100%' }}>
+            <ExternalLink size={18} /> Official Website
+          </a>
+        </div>
       </div>
     </section>
   );
