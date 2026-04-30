@@ -5,14 +5,14 @@ test('political persuasion refusal', () => {
     const result = analyzeIntent('Tell me why Party X is bad for the economy.');
     expect(result.safe).toBe(false);
     expect(result.intent).toBe('political_persuasion');
-    expect(result.message).toContain('I do not analyze political parties');
+    expect(result.message).toContain('JanSutra cannot recommend candidates');
 });
 
 test('candidate recommendation refusal', () => {
     const result = analyzeIntent('Who to vote for if I care about climate change?');
     expect(result.safe).toBe(false);
     expect(result.intent).toBe('candidate_recommendation');
-    expect(result.message).toContain('cannot recommend candidates');
+    expect(result.message).toContain('JanSutra cannot recommend candidates, parties, or voting choices.');
 });
 
 test('unverified deadline warning', () => {

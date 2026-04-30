@@ -1,19 +1,30 @@
 function analyzeIntent(query) {
     const lowerQuery = query.toLowerCase();
 
-    if (lowerQuery.includes("who to vote") || lowerQuery.includes("recommend") || lowerQuery.includes("best party")) {
+    const recommendationKeywords = [
+        "who to vote", "recommend", "best party", "who should i vote", 
+        "which party should i", "which candidate is best", "tell me the best candidate", 
+        "which leader should i choose"
+    ];
+    
+    if (recommendationKeywords.some(kw => lowerQuery.includes(kw))) {
         return {
             intent: "candidate_recommendation",
             safe: false,
-            message: "I am an educational tool and cannot recommend candidates or parties. I encourage you to read the official manifestos of the candidates in your constituency to make an informed decision."
+            message: "JanSutra cannot recommend candidates, parties, or voting choices. I can help you understand the election process, how to verify official information, and how to make your own informed decision."
         };
     }
 
-    if (lowerQuery.includes("bad for") || lowerQuery.includes("policy") || lowerQuery.includes("debate")) {
+    const persuasionKeywords = [
+        "bad for", "policy", "debate", "should i support", "who is better for india",
+        "convince me to vote", "bjp", "congress", "aap", "trinamool", "cpm", "bsp", "ncp"
+    ];
+
+    if (persuasionKeywords.some(kw => lowerQuery.includes(kw))) {
         return {
             intent: "political_persuasion",
             safe: false,
-            message: "I do not analyze political parties, policies, or provide opinions. My purpose is to help you understand the voting process, registration, and polling day procedures."
+            message: "JanSutra cannot recommend candidates, parties, or voting choices. I can help you understand the election process, how to verify official information, and how to make your own informed decision."
         };
     }
 
