@@ -12,6 +12,7 @@ const simulationRoute = require('./routes/simulation');
 const officialLinksRoute = require('./routes/officialLinks');
 const assistantRoute = require('./routes/assistant');
 const readinessRoute = require('./routes/readiness');
+const telemetryRoute = require('./routes/telemetry');
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use('/api/simulation', simulationRoute);
 app.use('/api/official-links', officialLinksRoute);
 app.use('/api/assistant', assistantRoute);
 app.use('/api/readiness', readinessRoute);
+app.use('/api/telemetry', telemetryRoute);
 
 // Serve Static React App in Production with caching
 app.use(express.static(path.join(__dirname, '../public'), { maxAge: '1d' }));
