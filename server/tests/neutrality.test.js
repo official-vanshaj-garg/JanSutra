@@ -41,3 +41,31 @@ test('safe educational query allows "party" and "vote"', () => {
     expect(result2.safe).toBe(true);
     expect(result2.intent).toBe('educational');
 });
+
+test('sensitive personal data is blocked (voter ID, EPIC, Aadhaar, phone, address)', () => {
+    const inputs = [
+        "My voter ID is ABC123, check my status.",
+        "My EPIC number is ABC1234567.",
+        "My Aadhaar number is 123456789012.",
+        "My phone number is 9876543210.",
+        "My address is 12 MG Road, check my polling booth.",
+        "Check my voter status using this ID."
+    ];
+
+    inputs.forEach(input => {
+        const result = analyzeIntent(input);
+        expect(result.safe).toBe(false);
+        expect(result.intent).toBe('sensitive_personal_data');
+    });
+});
+
+test('educational queries about ID are allowed', () => {
+    const result1 = analyzeIntent('What is a voter ID?');
+    expect(result1.safe).toBe(true);
+
+    const result2 = analyzeIntent('What is EPIC?');
+    expect(result2.safe).toBe(true);
+
+    const result3 = analyzeIntent('How can I check my name in the voter list?');
+    expect(result3.safe).toBe(true);
+});

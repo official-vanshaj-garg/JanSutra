@@ -47,11 +47,13 @@ function analyzeIntent(query) {
         };
     }
     
-    if (lowerQuery.includes("voter id number is") || lowerQuery.includes("aadhar")) {
+    const piiRegex = /\b(my voter id|my epic|my aadhaar|my phone|my address|using this id|[0-9]{10}|[0-9]{12})\b/i;
+    
+    if (piiRegex.test(lowerQuery)) {
         return {
             intent: "sensitive_personal_data",
             safe: false,
-            message: "For your security, please do not share your Voter ID number with me. To check if you are on the electoral roll, please visit the official Election Commission website."
+            message: "Please do not share voter ID numbers, EPIC numbers, Aadhaar numbers, phone numbers, addresses, or other sensitive personal information here. JanSutra can explain the process and direct you to official portals."
         };
     }
 

@@ -7,5 +7,8 @@
     "build": "cd client && npm run build && cd .. && node scripts/copy-client-build.js",
     "test": "cd server && npm test",
     "start": "cd server && npm start"
+  },
+  "devDependencies": {
+    "puppeteer": "^24.42.0"
   }
 }

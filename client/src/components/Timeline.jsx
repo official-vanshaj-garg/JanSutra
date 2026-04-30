@@ -1,7 +1,7 @@
 import { MapPin } from 'lucide-react';
 
 export default function Timeline({ items }) {
-  if (!items || items.length === 0) return null;
+  if (!items || !Array.isArray(items) || items.length === 0) return null;
 
   return (
     <section className="card" aria-labelledby="timeline-heading">

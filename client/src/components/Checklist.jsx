@@ -1,7 +1,7 @@
 import { CheckSquare } from 'lucide-react';
 
 export default function Checklist({ items }) {
-  if (!items || items.length === 0) return null;
+  if (!items || !Array.isArray(items) || items.length === 0) return null;
 
   return (
     <section className="card" aria-labelledby="checklist-heading">

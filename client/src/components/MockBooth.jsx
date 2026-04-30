@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 
 export default function MockBooth({ apiBase }) {
-  const [steps, setSteps] = [
+  const [steps, setSteps] = useState([
     "Identity Check",
     "Inking",
     "EVM",
     "VVPAT"
-  ]; // Using hardcoded for simplicity, but simulating the API flow
+  ]); // Using hardcoded for simplicity, but simulating the API flow
   
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [error, setError] = useState('');

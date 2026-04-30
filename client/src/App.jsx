@@ -9,6 +9,7 @@ import SatyaCheck from './components/SatyaCheck';
 import OfficialLinks from './components/OfficialLinks';
 import ConfusionCards from './components/ConfusionCards';
 import AssistantPanel from './components/AssistantPanel';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
 
@@ -39,7 +40,7 @@ function App() {
       });
       if (!journeyRes.ok) throw new Error('Failed to fetch journey');
       const journeyData = await journeyRes.json();
-      setJourney(journeyData.journey || []);
+      setJourney(Array.isArray(journeyData.journey) ? journeyData.journey : []);
 
       // Fetch Checklist
       const checklistRes = await fetch(`${API_BASE}/api/checklist`, {
@@ -49,7 +50,7 @@ function App() {
       });
       if (!checklistRes.ok) throw new Error('Failed to fetch checklist');
       const checklistData = await checklistRes.json();
-      setChecklist(checklistData.checklist || []);
+      setChecklist(Array.isArray(checklistData.checklist) ? checklistData.checklist : []);
 
       // Fetch Readiness Score
       const readinessRes = await fetch(`${API_BASE}/api/readiness`, {
@@ -83,17 +84,19 @@ function App() {
             </button>
           </div>
         ) : (
-          <div className="journey-results">
-            <button className="btn btn-secondary" onClick={() => setUserContext(null)} style={{marginBottom: '1rem'}}>
-              Start Over
-            </button>
-            <CivicReadinessScore scoreData={readiness} />
-            <Timeline items={journey || []} />
-            <Checklist items={checklist || []} />
-            <ConfusionCards />
-            <MockBooth apiBase={`${API_BASE}/api`} />
-            <AssistantPanel apiBase={`${API_BASE}/api`} context={userContext} />
-          </div>
+          <ErrorBoundary>
+            <div className="journey-results">
+              <button className="btn btn-secondary" onClick={() => setUserContext(null)} style={{marginBottom: '1rem'}}>
+                Start Over
+              </button>
+              <CivicReadinessScore scoreData={readiness} />
+              <Timeline items={journey || []} />
+              <Checklist items={checklist || []} />
+              <ConfusionCards />
+              <MockBooth apiBase={`${API_BASE}/api`} />
+              <AssistantPanel apiBase={`${API_BASE}/api`} context={userContext} />
+            </div>
+          </ErrorBoundary>
         )}
 
         <hr style={{margin: '2rem 0', borderColor: 'var(--border-color)'}} />
