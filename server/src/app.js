@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const helmet = require('helmet');
+const compression = require('compression');
 
 const healthRoute = require('./routes/health');
 const journeyRoute = require('./routes/journey');
@@ -13,8 +15,11 @@ const readinessRoute = require('./routes/readiness');
 
 const app = express();
 
+// Security and Efficiency Middleware
+app.use(helmet({ contentSecurityPolicy: false })); // Disabled CSP for Vite inline script compatibility
+app.use(compression());
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '16kb' }));
 
 // API Routes
 app.use('/api/health', healthRoute);
@@ -26,8 +31,8 @@ app.use('/api/official-links', officialLinksRoute);
 app.use('/api/assistant', assistantRoute);
 app.use('/api/readiness', readinessRoute);
 
-// Serve Static React App in Production
-app.use(express.static(path.join(__dirname, '../public')));
+// Serve Static React App in Production with caching
+app.use(express.static(path.join(__dirname, '../public'), { maxAge: '1d' }));
 
 // Catch-all route to serve index.html for React Router (if needed) and direct links
 app.use((req, res) => {

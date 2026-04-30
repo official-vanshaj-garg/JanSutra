@@ -9,6 +9,9 @@ router.post('/explain', async (req, res) => {
     if (!question) {
         return res.status(400).json({ error: 'Question is required' });
     }
+    if (question.length > 500) {
+        return res.status(400).json({ error: 'Question exceeds maximum allowed length of 500 characters' });
+    }
 
     // Layer 1: Deterministic check
     const intentResult = analyzeIntent(question);

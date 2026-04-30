@@ -26,6 +26,10 @@ JanSutra is built with a **Deterministic-First** architecture. This ensures abso
 1. **Layer 1 (Deterministic SatyaCheck)**: All inputs pass through a strict rule-based engine. If a query requests political persuasion, candidate recommendation, unverified deadlines, or sensitive personal data, it is immediately blocked with a hardcoded safe response.
 2. **Layer 2 (Gemini Integration)**: If deemed safe, the context is passed to the Gemini API, heavily constrained by system instructions to act only as an educational explainer.
 
+### 📚 Core Documentation
+- [API Contract](./docs/API_CONTRACT.md): Comprehensive breakdown of all endpoints, inputs, and strict output schemas.
+- [Evaluation Evidence Mapping](./docs/EVALUATION_EVIDENCE.md): Direct mappings of JanSutra's architecture to the Hack2Skill judging metrics.
+
 ## ⚙️ How the Solution Works
 1. **JanPath Wizard**: Users select their personas (e.g., First-Time Voter, Senior Citizen).
 2. **Deterministic Engines**: The server generates an accessible, step-by-step Timeline and Preparation Checklist.
