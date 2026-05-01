@@ -18,6 +18,10 @@ Keep answers simple, accessible, and step-by-step.
 Use India-first civic education language, but stay neutral and inclusive.
 `;
 
+const { MAX_GEMINI_PROMPT_CHARS } = require('../constants/appConstants');
+const { sanitizeUserContext, sanitizeErrorMessage } = require('../utils/sanitizers');
+const { analyzeIntent } = require('../engines/neutralityEngine');
+
 async function generateExplanation(context, question) {
     if (!ai) {
         return {
@@ -28,15 +32,34 @@ async function generateExplanation(context, question) {
         };
     }
 
+    const sanitizedContext = sanitizeUserContext(context);
     const configuredModel = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
     const fallbackModel = configuredModel === 'gemini-2.5-flash-lite' ? 'gemini-2.5-flash' : 'gemini-2.5-flash-lite';
 
+    // Harden prompt with clear delimiters to prevent context bleeding
     const prompt = `
-User Context: ${JSON.stringify(context || {})}
-User Question: ${question}
+=== SYSTEM INSTRUCTION ===
+${SYSTEM_INSTRUCTION}
 
-Provide an educational explanation based on the system instructions.
+=== USER CONTEXT ===
+${JSON.stringify(sanitizedContext)}
+
+=== USER QUESTION ===
+${question}
+
+=== OUTPUT FORMAT ===
+Provide an educational explanation in the requested JSON schema.
 `;
+
+    if (prompt.length > MAX_GEMINI_PROMPT_CHARS) {
+        console.warn("Prompt length exceeded limit, falling back to deterministic response.");
+        return {
+            answer: getDeterministicFallback(question),
+            safetyCategory: "prompt_too_large",
+            usedFallback: true,
+            officialVerificationRequired: true
+        };
+    }
 
     const getModelOptions = (modelName) => ({
         model: modelName,
@@ -66,11 +89,10 @@ Provide an educational explanation based on the system instructions.
             response = await ai.models.generateContent(getModelOptions(configuredModel));
             success = true;
         } catch (initialError) {
-            const msg = initialError.message || "";
-            const status = initialError.status || 0;
-            const isTransient = status === 503 || status === 429 || msg.includes('503') || msg.includes('429') || msg.includes('UNAVAILABLE');
+            const safeCategory = sanitizeErrorMessage(initialError);
+            console.warn(`Gemini Error [${safeCategory}] on ${configuredModel}`);
             
-            if (isTransient) {
+            if (safeCategory === 'unavailable' || safeCategory === 'rate_or_quota') {
                 await delay(500);
                 try {
                     response = await ai.models.generateContent(getModelOptions(configuredModel));
@@ -78,8 +100,6 @@ Provide an educational explanation based on the system instructions.
                 } catch (_retryError) {
                     console.warn(`Retry failed for ${configuredModel}`);
                 }
-            } else {
-                console.warn(`Non-transient error for ${configuredModel}: ${msg}`);
             }
         }
 
@@ -88,12 +108,26 @@ Provide an educational explanation based on the system instructions.
                 response = await ai.models.generateContent(getModelOptions(fallbackModel));
                 success = true;
             } catch (fallbackError) {
-                console.warn(`Fallback model ${fallbackModel} failed: ${fallbackError.message}`);
+                console.warn(`Fallback model ${fallbackModel} failed: ${sanitizeErrorMessage(fallbackError)}`);
             }
         }
 
         if (success && response) {
             const result = JSON.parse(response.text);
+            
+            // Post-Generation Safety Validation
+            // Run the answer through SatyaCheck logic to ensure AI didn't hallucinate unsafe content
+            const safetyAudit = analyzeIntent(result.answer);
+            if (!safetyAudit.safe) {
+                console.warn(`AI hallucinated unsafe content [${safetyAudit.intent}]. Triggering fallback.`);
+                return {
+                    answer: getDeterministicFallback(question),
+                    safetyCategory: "hallucination_blocked",
+                    usedFallback: true,
+                    officialVerificationRequired: true
+                };
+            }
+
             return {
                 ...result,
                 usedFallback: false
@@ -102,7 +136,7 @@ Provide an educational explanation based on the system instructions.
             throw new Error("Both primary and fallback models failed");
         }
     } catch (error) {
-        console.error("Gemini API Exhausted:", error.message);
+        console.error(`AI Service Exhausted: ${sanitizeErrorMessage(error)}`);
         return {
             answer: getDeterministicFallback(question),
             safetyCategory: "educational_fallback",
@@ -132,6 +166,9 @@ function getDeterministicFallback(question) {
     }
     if (q.includes('polling booth')) {
         return "Your polling booth is the designated location where you cast your vote. You can find your specific polling station details by searching the official Voter's Service Portal with your EPIC number.";
+    }
+    if (q.includes('political party') || q.includes('party in election') || (q.includes('explain') && q.includes('part'))) {
+        return "A political party is an organization of people with shared ideas or policy goals that contests elections and may form a government if elected. JanSutra does not recommend any party or candidate; it only explains the election process and encourages users to verify official information.";
     }
     if (q.includes('registration') || q.includes('register')) {
         return "To register to vote, eligible citizens usually need to submit Form 6. This can be done online through the official Voter's Service Portal or offline via your local Booth Level Officer (BLO).";

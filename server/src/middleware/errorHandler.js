@@ -9,18 +9,25 @@
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
+const { sanitizeErrorMessage } = require('../utils/sanitizers');
+
 function errorHandler(err, req, res, _next) {
-    // Never log raw error objects that may contain API keys or sensitive context.
+    const safeCategory = sanitizeErrorMessage(err);
     const message = err.message || 'An unexpected error occurred';
     const status = err.status || err.statusCode || 500;
 
     console.error(JSON.stringify({
         event: 'server_error',
         status,
-        message
+        category: safeCategory,
+        // Only log the message if it's not a 500 or if it's explicitly safe
+        message: status < 500 ? message : 'Internal Server Error'
     }));
 
-    res.status(status).json({ error: message });
+    res.status(status).json({ 
+        error: status < 500 ? message : 'Internal Server Error',
+        category: safeCategory 
+    });
 }
 
 module.exports = { errorHandler };

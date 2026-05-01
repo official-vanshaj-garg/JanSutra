@@ -24,6 +24,8 @@ All server-side logic and client-side components were generated and refined thro
 | `simulationEngine.js` | Deterministic step sequencer. |
 | `telemetryService.js` | Rule-based event filter. No AI. Strict allowlist. |
 | `validateInput.js` | Deterministic input validation middleware. |
+| `rateLimiter.js` | Deterministic request throttling. |
+| `sanitizers.js` | Deterministic context and error mapping. |
 
 ## Governance Controls
 

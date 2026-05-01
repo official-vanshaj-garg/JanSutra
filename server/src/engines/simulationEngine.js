@@ -9,6 +9,11 @@ function getSimulationSteps() {
 
 function validateStepOrder(currentStep, targetStep) {
     const steps = getSimulationSteps();
+    
+    if (!steps.includes(currentStep) || !steps.includes(targetStep)) {
+        return { valid: false, message: "Invalid simulation step provided." };
+    }
+
     const currentIndex = steps.indexOf(currentStep);
     const targetIndex = steps.indexOf(targetStep);
 

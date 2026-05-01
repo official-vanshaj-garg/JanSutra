@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const compression = require('compression');
 
 const { JSON_BODY_LIMIT, STATIC_CACHE_MAX_AGE } = require('./constants/appConstants');
+const { apiLimiter } = require('./middleware/rateLimiter');
 const { notFoundHandler } = require('./middleware/notFoundHandler');
 const { errorHandler } = require('./middleware/errorHandler');
 
@@ -25,6 +26,9 @@ app.use(helmet({ contentSecurityPolicy: false })); // Disabled CSP for Vite inli
 app.use(compression());
 app.use(cors());
 app.use(express.json({ limit: JSON_BODY_LIMIT }));
+
+// Apply general rate limit to all API routes
+app.use('/api', apiLimiter);
 
 // API Routes
 app.use('/api/health', healthRoute);

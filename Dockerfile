@@ -18,4 +18,5 @@ COPY --from=client-builder /app/client/dist ./public
 
 # Expose port and start
 EXPOSE 3000
+USER node
 CMD ["npm", "start"]

@@ -4,10 +4,13 @@ const { analyzeIntent } = require('../engines/neutralityEngine');
 const { generateExplanation } = require('../services/geminiService');
 const { logEvent } = require('../services/telemetryService');
 const { validateTextInput } = require('../middleware/validateInput');
+const { assistantLimiter } = require('../middleware/rateLimiter');
+const { sanitizeUserContext } = require('../utils/sanitizers');
 
-router.post('/explain', validateTextInput('question'), async (req, res, next) => {
+router.post('/explain', assistantLimiter, validateTextInput('question'), async (req, res, next) => {
     try {
         const { context, question } = req.body;
+        const sanitizedContext = sanitizeUserContext(context);
 
         // Layer 1: Deterministic neutrality check
         const intentResult = analyzeIntent(question);
@@ -23,7 +26,7 @@ router.post('/explain', validateTextInput('question'), async (req, res, next) =>
         }
 
         // Layer 2: Gemini Generation with fallback
-        const explanation = await generateExplanation(context, question);
+        const explanation = await generateExplanation(sanitizedContext, question);
 
         if (explanation.usedFallback) {
             logEvent('assistant_fallback_used', { source: explanation.safetyCategory || 'educational_fallback' });
