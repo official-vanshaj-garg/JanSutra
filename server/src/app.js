@@ -21,6 +21,9 @@ const telemetryRoute = require('./routes/telemetry');
 
 const app = express();
 
+// Trust the first proxy (Cloud Run load balancer)
+app.set('trust proxy', 1);
+
 // Security and Efficiency Middleware
 app.use(helmet({ contentSecurityPolicy: false })); // Disabled CSP for Vite inline script compatibility
 app.use(compression());
