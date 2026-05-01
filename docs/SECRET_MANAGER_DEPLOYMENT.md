@@ -31,7 +31,8 @@ gcloud run deploy jansutra \
   --source . \
   --region asia-south1 \
   --allow-unauthenticated \
-  --set-secrets="GEMINI_API_KEY=GEMINI_API_KEY:latest"
+  --set-secrets="GEMINI_API_KEY=GEMINI_API_KEY:latest" \
+  --set-env-vars GEMINI_MODEL="gemini-2.5-flash",TELEMETRY_ENABLED="true",FIRESTORE_COLLECTION="jansutra_events"
 ```
 
 **Note**: For local development, JanSutra securely uses `dotenv` to load the `.env` file from the `server/` directory. You do not need to configure Secret Manager or Google Cloud credentials to run the app locally on your machine.

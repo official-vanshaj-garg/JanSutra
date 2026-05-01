@@ -2,19 +2,22 @@
 
 JanSutra is a **neutral, educational platform** designed to demystify the Indian election process for first-time voters, senior citizens, and persons with disabilities. 
 
+- **Live Site**: [https://jansutra-22389764914.asia-south1.run.app](https://jansutra-22389764914.asia-south1.run.app)
+- **GitHub Repository**: [https://github.com/official-vanshaj-garg/JanSutra](https://github.com/official-vanshaj-garg/JanSutra)
+
 It provides an interactive **JanPath Wizard** to map out personalized voting journeys, a **Mock Booth** simulation, and an AI-powered **Assistant Panel** backed by Gemini, all safeguarded by a deterministic neutrality engine (SatyaCheck).
 
 ## 🏆 Hack2Skill Evaluation Evidence
 
 | Metric | Implemented Proof |
 | :--- | :--- |
-| **Code Quality** | Express + React architecture, middleware optimization (compression, helmet), ErrorBoundary, and strict JSON schemas. |
-| **Security** | Deterministic SatyaCheck firewall, PII blocking, and Google Secret Manager integration. |
-| **Efficiency** | Static caching (1d maxAge), fire-and-forget telemetry, and lightweight Flash-Lite Gemini model. |
-| **Testing** | 36/36 passing tests, including API integration (Supertest) and privacy guardrail validation. |
-| **Accessibility** | Dedicated "Sahaj Mode", semantic HTML5, and persona-based inclusive UX. |
-| **Google Services** | Gemini AI, Cloud Run, Firestore, Secret Manager, and Cloud Logging integration. |
-| **Problem Alignment** | Direct solution for Voter Education (Option B) focusing on process literacy. |
+| **Code Quality** | Centralized Express middleware (`validateInput`, `errorHandler`, `notFoundHandler`), constant-driven engines, and linting gates. |
+| **Security** | Rate limiting, context sanitization, post-generation AI output validation, PII blocking, and Secret Manager integration. |
+| **Efficiency** | Static caching (1d maxAge), fire-and-forget anonymous telemetry, and lightweight Flash-Lite Gemini model. |
+| **Testing** | **54/54 passing tests** (Vitest + Supertest), including security hardening, telemetry sanitization, and API integration. |
+| **Accessibility** | Dedicated "Sahaj Mode", semantic HTML5, personas (Senior/PwD), and WCAG-aligned inclusive UX. |
+| **Google Services** | Gemini AI, Cloud Run, Firestore, Secret Manager, Cloud Logging, and Antigravity Agent. |
+| **Problem Alignment** | Direct solution for Voter Education (Option B) focusing on process literacy and disinformation defense. |
 
 ### 🛠 Google Services Implemented
 
@@ -35,10 +38,11 @@ It provides an interactive **JanPath Wizard** to map out personalized voting jou
 - **Anonymous Metrics**: Firestore only stores sanitized event metadata (e.g., `scoreBand: medium`).
 
 ### 🧪 Test Summary
-- **36/36 tests passing** (Vitest suite).
+- **54/54 tests passing** (Vitest suite).
+- **Security Hardening**: Tests for rate limiting, context sanitization, and step validation.
 - **API Integration**: Full route coverage using `supertest`.
-- **Privacy Tests**: Dedicated validation for telemetry sanitization.
-- **Neutrality Tests**: Guardrail verification for political and PII blocking.
+- **Privacy Tests**: Dedicated validation for telemetry sanitization and PII blocking.
+- **Neutrality Tests**: Guardrail verification for political and candidate recommendation blocking.
 
 ---
 
@@ -70,6 +74,8 @@ JanSutra is built with a **Deterministic-First** architecture. This ensures abso
 - [Google Services](./docs/GOOGLE_SERVICES.md): Detailed explanation of all integrated Google Cloud and AI services.
 - [Secret Manager Deployment](./docs/SECRET_MANAGER_DEPLOYMENT.md): Guide for secure production secret handling.
 - [Security and Neutrality](./docs/SECURITY_AND_NEUTRALITY.md): Explicit guardrails and SatyaCheck refusal rules.
+- [Threat Model](./docs/THREAT_MODEL.md): Analysis of threat categories and specific mitigations in JanSutra.
+- [AI Code Provenance](./docs/AI_CODE_PROVENANCE.md): Records of AI involvement, deterministic components, and governance.
 
 ## ⚙️ How the Solution Works
 1. **JanPath Wizard**: Users select their personas (e.g., First-Time Voter, Senior Citizen).
@@ -78,12 +84,9 @@ JanSutra is built with a **Deterministic-First** architecture. This ensures abso
 4. **Ask JanSutra**: Users can ask the Gemini-powered assistant follow-up questions, which are heavily filtered.
 5. **Sahaj Mode**: A one-click toggle for high-contrast, large-font readability.
 
-## 🛠 Google Services Used
-- **Google Gemini API**: Utilized via `@google/genai` to provide simple, natural-language explanations of complex polling steps.
-- **Google Cloud Run**: The application is containerized into a single Docker image (Express serving static Vite React build) for serverless deployment on Google Cloud Run.
 
 ## 🛡️ Security & Neutrality Notes
-- **Zero PII**: No database is used. The app does not ask for or store Voter ID numbers, names, or phone numbers.
+- **Zero PII Storage**: No personal voter database is used. Firestore stores only sanitized anonymous event metadata and never stores raw questions, voter IDs, Aadhaar, EPIC, phone numbers, addresses, party preferences, or candidate preferences.
 - **No Political Entities**: No real Indian political parties, candidates, or symbols exist anywhere in the codebase.
 - **No Client-Side Secrets**: The `GEMINI_API_KEY` is kept strictly on the Node.js server. The client only communicates with our backend wrapper.
 
@@ -110,6 +113,9 @@ npm run test
    Create `server/.env` and add:
    ```env
    GEMINI_API_KEY=your_google_gemini_api_key_here
+   GEMINI_MODEL=gemini-2.5-flash
+   TELEMETRY_ENABLED=false
+   FIRESTORE_COLLECTION=jansutra_events
    PORT=3000
    ```
 4. Start development environments:
@@ -124,11 +130,20 @@ JanSutra is designed to be deployed as a single unified service. The provided `D
    ```bash
    gcloud config set project YOUR_PROJECT_ID
    ```
-3. Deploy directly using Cloud Run:
-   ```bash
-   gcloud run deploy jansutra \
-     --source . \
-     --region asia-south1 \
-     --allow-unauthenticated \
-     --set-env-vars GEMINI_API_KEY=YOUR_GEMINI_API_KEY
-   ```
+   3. Deploy directly using Cloud Run (Secret Manager recommended for API Key):
+      ```bash
+      gcloud run deploy jansutra \
+        --source . \
+        --region asia-south1 \
+        --allow-unauthenticated \
+        --set-secrets GEMINI_API_KEY=GEMINI_API_KEY:latest \
+        --set-env-vars GEMINI_MODEL="gemini-2.5-flash",TELEMETRY_ENABLED="true",FIRESTORE_COLLECTION="jansutra_events"
+      ```
+
+## 👥 Maintainer
+
+<table>
+  <tr>
+    <td align="center"><b>Vanshaj Garg</b><br/>📧 <a href="mailto:official.vanshaj.garg@gmail.com">official.vanshaj.garg@gmail.com</a><br/>🔗 <a href="https://www.linkedin.com/in/vanshajgargg">LinkedIn</a></td>
+  </tr>
+</table>

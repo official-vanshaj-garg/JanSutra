@@ -9,8 +9,8 @@ This document maps the 6 Hack2Skill judging metrics to specific code and archite
 
 ### 2. Security
 - **Data Privacy**: The deterministic `neutralityEngine.js` explicitly intercepts and blocks Sensitive Personal Information (PII) including Voter IDs, Aadhaar numbers, and phone numbers before they can be sent to Google Gemini.
-- **Political Neutrality**: SatyaCheck acts as a strict firewall blocking candidate recommendations and political persuasion.
-- **API Protection**: `helmet` prevents XSS and clickjacking. `express.json` is limited to 16kb, and endpoints enforce 500-character input limits. Secrets are managed securely via `dotenv` and strictly `.gitignore`d.
+- **Hardened Neutrality**: SatyaCheck acts as a strict firewall. All Gemini output is also validated post-generation to ensure no political persuasion or candidate recommendations leak through.
+- **API Protection**: `rateLimiter.js` prevents DDoS/abuse. `validateInput.js` enforces strict length limits. `sanitizers.js` drops unexpected context fields. Secrets are handled via Secret Manager.
 
 ### 3. Efficiency
 - **Lightweight Architecture**: JanSutra uses localized deterministic state arrays rather than heavy database lookups (Firestore), allowing instant context generation.
@@ -19,9 +19,10 @@ This document maps the 6 Hack2Skill judging metrics to specific code and archite
 - **Automated Fallbacks**: The Gemini integration employs a fast 500ms retry block for 503 errors and cross-switches models to prevent hanging connections.
 
 ### 4. Testing
-- **Comprehensive Coverage**: 24+ automated tests via `Vitest` and `Supertest`.
+- **Comprehensive Coverage**: **54/54 automated tests** via `Vitest` and `Supertest`.
 - **API Integration Tests**: `api.test.js` guarantees all routes return correct HTTP status codes and valid schemas.
-- **CI/CD Pipeline**: A GitHub Actions workflow (`.github/workflows/ci.yml`) automatically builds the client, installs server dependencies, and executes the test suite on every push/PR.
+- **Security & Hardening**: `security.test.js` verifies rate limits, context sanitization, and step validation.
+- **CI/CD Pipeline**: A GitHub Actions workflow (`ci.yml`) executes the full `npm run verify` suite (Lint + Test + Build) on every push to `main`.
 
 ### 5. Accessibility
 - **Sahaj Mode**: A dedicated toggle dynamically adjusts contrast, font weight, and structural layout to support visual impairments.
