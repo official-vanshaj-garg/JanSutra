@@ -4,6 +4,44 @@ JanSutra is a **neutral, educational platform** designed to demystify the Indian
 
 It provides an interactive **JanPath Wizard** to map out personalized voting journeys, a **Mock Booth** simulation, and an AI-powered **Assistant Panel** backed by Gemini, all safeguarded by a deterministic neutrality engine (SatyaCheck).
 
+## 🏆 Hack2Skill Evaluation Evidence
+
+| Metric | Implemented Proof |
+| :--- | :--- |
+| **Code Quality** | Express + React architecture, middleware optimization (compression, helmet), ErrorBoundary, and strict JSON schemas. |
+| **Security** | Deterministic SatyaCheck firewall, PII blocking, and Google Secret Manager integration. |
+| **Efficiency** | Static caching (1d maxAge), fire-and-forget telemetry, and lightweight Flash-Lite Gemini model. |
+| **Testing** | 36/36 passing tests, including API integration (Supertest) and privacy guardrail validation. |
+| **Accessibility** | Dedicated "Sahaj Mode", semantic HTML5, and persona-based inclusive UX. |
+| **Google Services** | Gemini AI, Cloud Run, Firestore, Secret Manager, and Cloud Logging integration. |
+| **Problem Alignment** | Direct solution for Voter Education (Option B) focusing on process literacy. |
+
+### 🛠 Google Services Implemented
+
+| Service | Usage in JanSutra |
+| :--- | :--- |
+| **Google Antigravity** | Agentic AI co-development for architecture and audit. |
+| **Google Gemini API** | Multi-model fallback (Flash/Lite) for educational explanations. |
+| **Google Cloud Run** | Unified serverless deployment for scalability and performance. |
+| **Google Secret Manager** | Secure handling of GEMINI_API_KEY without environment exposure. |
+| **Google Firestore** | Opt-in anonymous telemetry for usage metrics (no PII). |
+| **Google Cloud Logging** | Structured JSON logs for production auditing and monitoring. |
+
+### 🔒 Privacy-First Difference
+- **Zero Login**: No user authentication or identity tracking required.
+- **Zero PII Storage**: Never stores Voter ID, Aadhaar, EPIC, phone numbers, or addresses.
+- **Zero Raw Data**: No storage of raw user questions or conversational prompts.
+- **Zero Partisanship**: No tracking of political opinions or candidate preferences.
+- **Anonymous Metrics**: Firestore only stores sanitized event metadata (e.g., `scoreBand: medium`).
+
+### 🧪 Test Summary
+- **36/36 tests passing** (Vitest suite).
+- **API Integration**: Full route coverage using `supertest`.
+- **Privacy Tests**: Dedicated validation for telemetry sanitization.
+- **Neutrality Tests**: Guardrail verification for political and PII blocking.
+
+---
+
 **Disclaimer:** JanSutra is an educational practice lab. It is NOT an official election authority. It does not provide final live election deadlines, constituency-specific polling booth locations, or candidate recommendations.
 
 ---
@@ -29,6 +67,9 @@ JanSutra is built with a **Deterministic-First** architecture. This ensures abso
 ### 📚 Core Documentation
 - [API Contract](./docs/API_CONTRACT.md): Comprehensive breakdown of all endpoints, inputs, and strict output schemas.
 - [Evaluation Evidence Mapping](./docs/EVALUATION_EVIDENCE.md): Direct mappings of JanSutra's architecture to the Hack2Skill judging metrics.
+- [Google Services](./docs/GOOGLE_SERVICES.md): Detailed explanation of all integrated Google Cloud and AI services.
+- [Secret Manager Deployment](./docs/SECRET_MANAGER_DEPLOYMENT.md): Guide for secure production secret handling.
+- [Security and Neutrality](./docs/SECURITY_AND_NEUTRALITY.md): Explicit guardrails and SatyaCheck refusal rules.
 
 ## ⚙️ How the Solution Works
 1. **JanPath Wizard**: Users select their personas (e.g., First-Time Voter, Senior Citizen).
