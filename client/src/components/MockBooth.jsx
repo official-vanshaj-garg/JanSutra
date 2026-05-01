@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export default function MockBooth({ apiBase }) {
-  const [steps, setSteps] = useState([
+  const [steps] = useState([
     "Identity Check",
     "Inking",
     "EVM",
@@ -30,7 +30,7 @@ export default function MockBooth({ apiBase }) {
       } else {
         setError(data.message);
       }
-    } catch (err) {
+    } catch {
       setError("Error connecting to simulation engine.");
     }
   };

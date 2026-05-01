@@ -75,7 +75,7 @@ Provide an educational explanation based on the system instructions.
                 try {
                     response = await ai.models.generateContent(getModelOptions(configuredModel));
                     success = true;
-                } catch (retryError) {
+                } catch (_retryError) {
                     console.warn(`Retry failed for ${configuredModel}`);
                 }
             } else {

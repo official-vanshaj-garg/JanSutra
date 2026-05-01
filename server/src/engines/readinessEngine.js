@@ -1,20 +1,29 @@
+const {
+    READINESS_JOURNEY_WEIGHT,
+    READINESS_CHECKLIST_WEIGHT,
+    READINESS_GENERAL_BONUS,
+    READINESS_SINGLE_NEED_PENALTY,
+    READINESS_SENIOR_PWD_PENALTY,
+    READINESS_MULTI_NEED_PENALTY,
+} = require('../constants/appConstants');
+
 function calculateReadiness(userContext, journeyLength, checklistLength) {
     let score = 0;
-    let completed = ["Initiated JanPath Wizard"];
-    let remaining = [];
+    const completed = ['Initiated JanPath Wizard'];
+    const remaining = [];
 
     if (journeyLength > 0) {
-        score += 35;
-        completed.push("Personalized Journey Generated");
+        score += READINESS_JOURNEY_WEIGHT;
+        completed.push('Personalized Journey Generated');
     } else {
-        remaining.push("Complete your election timeline");
+        remaining.push('Complete your election timeline');
     }
 
     if (checklistLength > 0) {
-        score += 35;
-        completed.push("Preparation Checklist Generated");
+        score += READINESS_CHECKLIST_WEIGHT;
+        completed.push('Preparation Checklist Generated');
     } else {
-        remaining.push("Review necessary documents");
+        remaining.push('Review necessary documents');
     }
 
     let needsCount = 0;
@@ -23,34 +32,29 @@ function calculateReadiness(userContext, journeyLength, checklistLength) {
     if (userContext.isPwD) needsCount++;
 
     if (needsCount === 0) {
-        score += 10;
-        remaining.push("Verify your name on the official electoral roll");
+        score += READINESS_GENERAL_BONUS;
+        remaining.push('Verify your name on the official electoral roll');
     } else if (needsCount === 1) {
         if (userContext.isFirstTimeVoter) {
-            score -= 10;
-            remaining.push("Verify your Form 6 registration status");
-            remaining.push("Familiarize yourself with the EVM/VVPAT process");
+            score += READINESS_SINGLE_NEED_PENALTY;
+            remaining.push('Verify your Form 6 registration status');
+            remaining.push('Familiarize yourself with the EVM/VVPAT process');
         } else if (userContext.isSeniorCitizen) {
-            score -= 5;
-            remaining.push("Check eligibility for Form 12D (Home Voting)");
+            score += READINESS_SENIOR_PWD_PENALTY;
+            remaining.push('Check eligibility for Form 12D (Home Voting)');
         } else if (userContext.isPwD) {
-            score -= 5;
-            remaining.push("Check accessibility features at your polling station");
+            score += READINESS_SENIOR_PWD_PENALTY;
+            remaining.push('Check accessibility features at your polling station');
         }
     } else {
-        score -= 15;
-        remaining.push("Verify registration and coordinate special accommodations");
+        score += READINESS_MULTI_NEED_PENALTY;
+        remaining.push('Verify registration and coordinate special accommodations');
     }
 
     // Cap at 100, minimum 0
-    if (score > 100) score = 100;
-    if (score < 0) score = 0;
+    score = Math.min(100, Math.max(0, score));
 
-    return {
-        score,
-        completed,
-        remaining
-    };
+    return { score, completed, remaining };
 }
 
 module.exports = { calculateReadiness };

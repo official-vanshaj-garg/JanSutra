@@ -19,7 +19,8 @@ export default function AssistantPanel({ apiBase, context }) {
       });
       const data = await res.json();
       setResponse(data);
-    } catch (err) {
+    } catch {
+      console.error("Assistant connection error");
       setResponse({
         answer: "Failed to connect to the assistant.",
         safetyCategory: "error",

@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-test:
+  verify:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,21 +18,24 @@ jobs:
       with:
         node-version: '20'
 
-    - name: Install Client Dependencies
-      working-directory: ./client
-      run: npm install
+    - name: Install All Dependencies
+      run: npm run install:all
 
-    - name: Build Client
+    - name: Lint Client
       working-directory: ./client
-      run: npm run build
+      run: npm run lint
 
-    - name: Install Server Dependencies
+    - name: Install Server ESLint Dependencies
       working-directory: ./server
       run: npm install
+
+    - name: Lint Server
+      working-directory: ./server
+      run: npm run lint
 
     - name: Run Server Tests
       working-directory: ./server
       run: npm test
 
-    - name: Root Production Build Check
-      run: npm install && npm run build
+    - name: Production Build
+      run: npm run build

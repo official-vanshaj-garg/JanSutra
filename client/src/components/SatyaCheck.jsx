@@ -19,7 +19,7 @@ export default function SatyaCheck({ apiBase }) {
       });
       const data = await res.json();
       setResult(data);
-    } catch (err) {
+    } catch {
       setResult({ safe: false, intent: 'error', message: 'Connection failed.' });
     } finally {
       setLoading(false);

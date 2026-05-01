@@ -1,4 +1,3 @@
-const personas = require('../data/personas.json');
 
 function generateJourney(userContext) {
     let journey = [];
