@@ -8,6 +8,12 @@ test('Rate limit headers should be present', async () => {
     expect(res.headers).toHaveProperty('ratelimit-remaining');
 });
 
+test('Security headers should be present', async () => {
+    const res = await request(app).get('/api/health');
+    expect(res.headers).toHaveProperty('content-security-policy');
+    expect(res.headers['content-security-policy']).toContain("default-src 'self'");
+});
+
 test('Context sanitization in assistant route', async () => {
     // Verifying the endpoint remains stable and returns safe responses
     // even with unexpected/malicious context fields.

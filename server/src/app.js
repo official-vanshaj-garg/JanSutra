@@ -25,7 +25,22 @@ const app = express();
 app.set('trust proxy', 1);
 
 // Security and Efficiency Middleware
-app.use(helmet({ contentSecurityPolicy: false })); // Disabled CSP for Vite inline script compatibility
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            imgSrc: ["'self'", "data:"],
+            fontSrc: ["'self'", "data:"],
+            connectSrc: ["'self'"],
+            objectSrc: ["'none'"],
+            baseUri: ["'self'"],
+            frameAncestors: ["'none'"],
+            formAction: ["'self'"]
+        }
+    }
+}));
 app.use(compression());
 app.use(cors());
 app.use(express.json({ limit: JSON_BODY_LIMIT }));

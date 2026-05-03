@@ -16,9 +16,17 @@ function analyzeIntent(query) {
     }
 
     // Block dynamic partisan declarations (e.g. "I love TMK party", "I will vote for XYZ")
-    const partisanRegex = /(i (love|support|hate) [a-z0-9 ]+ party|i will (always )?vote (to|for) [a-z0-9 ]+|[a-z0-9 ]+ party is (best|worst)|vote for [a-z0-9 ]+)/i;
+    // Replaced polynomial regex with deterministic bounded checks to prevent ReDoS
+    const declarationPrefixes = ["i love ", "i support ", "i hate ", "vote for "];
+    const votePatterns = ["i will vote for ", "i will vote to ", "i will always vote for ", "i will always vote to "];
+    const bestWorstPatterns = [" party is best", " party is worst"];
+
+    const isPartisan = 
+        declarationPrefixes.some(p => lowerQuery.includes(p)) ||
+        votePatterns.some(p => lowerQuery.includes(p)) ||
+        bestWorstPatterns.some(p => lowerQuery.includes(p));
     
-    if (partisanRegex.test(lowerQuery)) {
+    if (isPartisan) {
         return {
             intent: "political_persuasion",
             safe: false,
